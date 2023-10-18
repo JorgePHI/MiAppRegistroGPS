@@ -18,6 +18,7 @@ var app = new Framework7({
       { path: '/registro/',         url: 'registro.html',   },
       { path: '/confirmacion/',     url: 'confirmacion.html',   },
       { path: '/info/',             url: 'info.html',   },
+      { path: '/login/',            url: 'login.html',   },
     ]
     // ... other parameters
   });
@@ -46,6 +47,11 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
     $$("#btnFinReg").on("click", fnFinRegistro);
 })
+
+$$(document).on('page:init', '.page[data-name="login"]', function (e) {
+    $$("#btnInicioSesion").on("click", fnIniciarSesion);
+})
+
 
 $$(document).on('page:init', '.page[data-name="confirmacion"]', function (e) {
     $$("#confNombre").text(nombre)
@@ -107,12 +113,68 @@ $$(document).on('page:init', '.page[data-name="info"]', function (e) {
 
 /* MIS FUNCIONES */
 var email, clave, nombre, apellido, latitud, longitud;
+
+function fnIniciarSesion() {
+    email = $$("#loginEmail").val();
+    clave = $$("#loginClave").val();
+
+    if (email!="" && clave!="") {
+
+
+        firebase.auth().signInWithEmailAndPassword(email, clave)
+          .then((userCredential) => {
+            // Signed in
+            var user = userCredential.user;
+
+            console.log("Bienvenid@!!! " + email);
+
+            mainView.router.navigate('/info/');
+            // ...
+          })
+          .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.error(errorCode);
+                console.error(errorMessage);
+          });
+
+
+
+
+    }
+}
+
+
 function fnRegistro() {
     email = $$("#indexEmail").val();
     clave = $$("#indexClave").val();
 
     if (email!="" && clave!="") {
-        mainView.router.navigate("/registro/")
+        firebase.auth().createUserWithEmailAndPassword(email, clave)
+              .then((userCredential) => {
+                // Signed in
+                var user = userCredential.user;
+                console.log("Bienvenid@!!! " + email);
+                // ...
+                mainView.router.navigate('/registro/');
+              })
+              .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.error(errorCode);
+                console.error(errorMessage);
+                if (errorCode == "auth/email-already-in-use") {
+                    console.error("el mail ya esta usado");
+                }
+                // ..
+              });
+
+
+
+
+
+        //mainView.router.navigate("/registro/")
     }
 }
 

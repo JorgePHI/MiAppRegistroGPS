@@ -45,7 +45,7 @@
                 <div class="navbar-bg"></div>
                 <div class="navbar-inner">
                     <div class="left"><i class="icon icon-back"></i></div>
-                    <div class="title">APP CON GPS</div>
+                    <div class="title">- APP CON GPS -</div>
                     <div class="right"><i class="icon icon-forward"></i></div>
                 </div>
             </div>
@@ -66,6 +66,7 @@
                     <div class="block">
                         
                         <!-- CONTENIDO DEMO -->
+                        <h2>Registro 1/2</h2>
                         <div class="grid grid-cols-1 grid-gap">
                             <div class="list list-strong-ios list-dividers-ios inset-ios">
                                 <ul>
@@ -110,6 +111,10 @@
                         <div class="grid grid-cols-1 grid-gap">
                             <div><a href="/info/" class="button button-outline button-round button-raised">Quiero saber más...</a></div>
                         </div>
+
+                        <div class="grid grid-cols-1 grid-gap">
+                            <div><a href="/login/" class="button button-outline button-round button-raised">Ya tengo usuario, quiero iniciar sesión</a></div>
+                        </div>
                         
                         
                         <!-- FIN DE DEMO -->
@@ -124,10 +129,33 @@
     </div>
 
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+<!--
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-firestore.js"></script>
+-->
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+          apiKey: "AIzaSyARWp9saPSHGOWjUDYG3byOtnruopiCDN8",
+          authDomain: "mobile2c2023.firebaseapp.com",
+          projectId: "mobile2c2023",
+          storageBucket: "mobile2c2023.appspot.com",
+          messagingSenderId: "355843294741",
+          appId: "1:355843294741:web:863f8922f6dc6abe8ef01c"
+        };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
+
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/framework7-bundle.min.js"></script>
     <!--<script type="text/javascript" src="lib/framework7/framework7.js"></script>-->
     <script type="text/javascript" src="js/my-app.js"></script>
+
 </body>
 
 </html>
