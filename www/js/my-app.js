@@ -25,6 +25,12 @@ var app = new Framework7({
 
 var mainView = app.views.create('.view-main');
 
+var db = firebase.firestore();
+var colRoles = db.collection("ROLES");
+var colPersonas = db.collection("PERSONAS");
+var colMensaje = db.collection("MENSAJES");
+
+
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
@@ -39,8 +45,9 @@ $$(document).on('page:init', function (e) {
 // Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     $$("#btnRegistro").on("click", fnRegistro);
+   //sembrarDatos();
 
-
+    cargarUsuariosEjemplo();
 
 })
 
@@ -56,9 +63,6 @@ $$(document).on('page:init', '.page[data-name="login"]', function (e) {
 $$(document).on('page:init', '.page[data-name="confirmacion"]', function (e) {
     $$("#confNombre").text(nombre)
     $$("#confEmail").text(email)
-
-
-
 
     // onSuccess Callback
     // This method accepts a Position object, which contains the
@@ -98,14 +102,30 @@ $$(document).on('page:init', '.page[data-name="confirmacion"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="info"]', function (e) {
-    
+    cargarDatosUsuarioLogueado();
 })
 
 
 
 
+/* SEMBRADO */  
+function sembrarDatos() {
+
+    var dato = { rol: "Desarrollador/a", color: "Verde" }
+    var miId = "DEV";
+    colRoles.doc(miId).set(dato)
+    .then( function(docRef) {
+        console.log("Doc creado con el id: " + docRef.id);
+    })
+    .catch(function(error) {
+        console.log("Error: " + error);
+    })
 
 
+
+
+
+}
 
 
 
@@ -183,6 +203,50 @@ function fnFinRegistro() {
     apellido = $$("#regApellido").val();
 
     if (nombre!="" && apellido!="") {
-        mainView.router.navigate("/confirmacion/")
+
+        datos = { nombre: nombre, apellido: apellido, rol: "DEV" }
+        elID = email;
+
+        colPersonas.doc(elID).set(datos)
+        .then( function(docRef) {
+           mainView.router.navigate("/confirmacion/") 
+        })
+        .catch(function(error) {
+            console.log("Error: " + error);
+        })
+
+        
     }
+}
+
+function cargarUsuariosEjemplo() {
+    colPersonas.get()
+    .then( function(qs) {
+        qs.forEach( function(elDoc) {
+            nombre = elDoc.data().nombre;
+            apellido = elDoc.data().apellido;
+            rol = elDoc.data().rol;
+            email = elDoc.id;
+            $$("#listaUsuarios").append("<hr>" + nombre + " / " + apellido + " / " + rol + " / " + email);
+        } )
+    })
+    .catch(function(error) {
+        console.log("Error: " + error);
+    })
+
+}
+
+function cargarDatosUsuarioLogueado() {
+    colPersonas.doc(email).get()
+    .then( function(unDoc) {
+        //console.log(unDoc);
+        nombre = unDoc.data().nombre;
+        apellido = unDoc.data().apellido;
+        rol = unDoc.data().rol;
+        email = unDoc.id;
+        $$("#infoDatos").html("<hr>" + nombre + " / " + apellido + " / " + rol + " / " + email);
+    } )
+    .catch(function(error) {
+        console.log("Error: " + error);
+    })
 }
