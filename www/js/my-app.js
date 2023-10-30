@@ -47,6 +47,11 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     $$("#btnRegistro").on("click", fnRegistro);
    //sembrarDatos();
 
+    platform = new H.service.Platform({
+    'apikey': '_ow7Fp2rO64rSPIuCfdLo2mqHput6iBzW6uJkU0ub20'
+   });
+
+
     cargarUsuariosEjemplo();
 
 })
@@ -103,8 +108,64 @@ $$(document).on('page:init', '.page[data-name="confirmacion"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="info"]', function (e) {
     cargarDatosUsuarioLogueado();
-})
 
+    /*latitud = -32.9454069 ;
+    longitud = -60.6456194;
+*/
+
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch("https://geocode.search.hereapi.com/v1/geocode?q=Zanta+Fé+571+Rosario+Santa+Fe+Argentina&apiKey=_ow7Fp2rO64rSPIuCfdLo2mqHput6iBzW6uJkU0ub20", requestOptions)
+      .then(response => response.text())
+
+/*
+.then( function(response) { return response.text(); }   )
+.then( (response) => { response.text(); } )
+.then( response => response.text() )
+*/
+      .then(result => { 
+            console.log(result) 
+            resultJson = JSON.parse(result);
+
+            console.log(resultJson)
+
+            latitud =  resultJson.items[0].position.lat;
+            longitud = resultJson.items[0].position.lng;
+
+            console.log(latitud)
+            console.log(longitud)
+
+            var defaultLayers = platform.createDefaultLayers();
+ 
+            // Instantiate (and display) a map object:
+            map = new H.Map(
+                document.getElementById('mapContainer'),
+                defaultLayers.vector.normal.map,
+                {
+                zoom: 16,
+                center: { lat: latitud, lng: longitud }
+                });
+         
+                coords = {lat: latitud, lng: longitud};
+                marker = new H.map.Marker(coords);
+         
+                // Add the marker to the map and center the map at the location of the marker:
+                map.addObject(marker);
+                map.setCenter(coords);
+
+            
+      })
+      .catch(error => console.log('error', error));
+
+
+    /* 
+    
+*/
+})
+    
 
 
 
@@ -133,6 +194,10 @@ function sembrarDatos() {
 
 /* MIS FUNCIONES */
 var email, clave, nombre, apellido, latitud, longitud;
+var map, platform, pos; // hereMaps
+
+
+
 
 function fnIniciarSesion() {
     email = $$("#loginEmail").val();
